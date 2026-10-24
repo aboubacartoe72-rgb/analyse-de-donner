@@ -1,10 +1,11 @@
 :root {
-  --primary-color: #040404;
+  --primary-color: #6366f1;
   --primary-hover: #4338ca;
   --bg-gradient-start: #0f172a;
   --bg-gradient-end: #1e1b4b;
   --card-bg: rgba(255, 255, 255, 0.05);
-  --card-border: rgba(255, 255, 255, 0.1);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --input-bg: rgba(15, 23, 42, 0.6);
   --text-main: #eff2ed;
   --text-muted: #94a3b8;
   --accent-glow: rgba(99, 102, 241, 0.35);
@@ -15,6 +16,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
@@ -24,9 +26,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2rem 1rem;
   overflow-x: hidden;
 }
+
 h1 {
   font-size: 2.5rem;
   font-weight: 700;
@@ -37,6 +40,14 @@ h1 {
   -webkit-text-fill-color: transparent;
   animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+form {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+}
+
 .forme {
   background: var(--card-bg);
   backdrop-filter: blur(16px);
@@ -44,28 +55,97 @@ h1 {
   border: 1px solid var(--card-border);
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(224, 220, 220, 0.945);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.2rem;
   width: 100%;
-  max-width: 480px;
   animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .forme:hover {
   transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 25px var(--accent-glow);
 }
 
+/* --- Labels --- */
+label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: -0.5rem;
+}
+
+/* --- Select (Menu déroulant) --- */
+select {
+  width: 100%;
+  background-color: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.1em;
+}
+
+select:hover, select:focus {
+  border-color: #818cf8;
+  background-color: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
+}
+
+select option {
+  background-color: #0f172a;
+  color: var(--text-main);
+  padding: 10px;
+}
+
+/* --- Textarea (Zone de texte) --- */
+textarea {
+  width: 100%;
+  min-height: 110px;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+textarea:hover, textarea:focus {
+  border-color: #818cf8;
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 10px rgba(129, 140, 248, 0.2);
+}
+
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* --- Champ d'upload de fichier --- */
 input[type="file"] {
-  background: rgba(15, 23, 42, 0.6);
-  border: 2px dashed rgba(255, 255, 255, 0.2);
-  padding: 1rem;
+  width: 100%;
+  background: var(--input-bg);
+  border: 2px dashed var(--card-border);
+  padding: 0.85rem;
   border-radius: 12px;
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -77,6 +157,7 @@ input[type="file"]:focus {
   color: var(--text-main);
   outline: none;
 }
+
 input[type="file"]::file-selector-button {
   background: rgba(255, 255, 255, 0.1);
   border: none;
@@ -89,9 +170,10 @@ input[type="file"]::file-selector-button {
 }
 
 input[type="file"]::file-selector-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
 }
 
+/* --- Bouton d'action --- */
 button {
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   color: #ffffff;
@@ -101,20 +183,22 @@ button {
   font-weight: 600;
   border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  margin-top: 0.5rem;
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.6);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
 }
 
 button:active {
   transform: translateY(1px);
 }
+
 button::after {
   content: '';
   position: absolute;
@@ -125,7 +209,7 @@ button::after {
   background: linear-gradient(
     60deg,
     transparent,
-    rgba(186, 70, 70, 0.25),
+    rgba(255, 255, 255, 0.2),
     transparent
   );
   transform: rotate(30deg) translateY(-100%);
@@ -136,22 +220,43 @@ button:hover::after {
   transform: rotate(30deg) translateY(100%);
 }
 
-#output {
+/* --- Zone d'affichage des résultats JS et Django --- */
+#output, #resultat-container {
   margin-top: 2rem;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
   color: var(--text-main);
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.6;
 }
-#output:not(:empty) {
+
+#output:not(:empty), #resultat-container {
   background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--card-border);
   padding: 1.5rem;
   border-radius: 16px;
-  animation: pulseIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: pulseIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+#resultat-container h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #38bdf8;
+}
+
+#resultat-container pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Consolas', 'Monaco', monospace;
+  background: rgba(15, 23, 42, 0.8);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --- Animations --- */
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -175,11 +280,11 @@ button:hover::after {
 }
 
 @keyframes pulseIn {
-  0% {
+  from {
     opacity: 0;
-    transform: scale(80);
+    transform: scale(0.95);
   }
-  100% {
+  to {
     opacity: 1;
     transform: scale(1);
   }

@@ -3,36 +3,137 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ma plateforme Data</title>
   <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
   <h1>Bienvenue sur la plateforme d’analyse</h1>
 
-  <form action="{% url 'analyse_fichier' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="forme">
-      <!-- Champ pour le sujet ou le prompt -->
-      <label for="sujet">Question / Sujet d'analyse géographique :</label><br>
-      <textarea id="sujet" name="sujet" placeholder="Ex: Identifie le type de relief, le couvert végétal ou la structure urbaine..."></textarea>
-      
-
-      <!-- Champ pour le fichier -->
-      <label for="file">Sélectionner un fichier :</label><br>
-      <input type="file" id="file" name="file" accept=".pdf,.csv,.xlsx,.json,.jpg,.jpeg,.png,.webp" required>
-      <button type="submit">Analyser</button>
-    </div>
-  </form>    
-
-  <!-- Affichage direct du résultat si rendu via Django -->
-  {% if resultat %}
-    <div id="resultat-container" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc;">
-      <h2>Résultat de l'analyse :</h2>
-      <pre>{{ resultat }}</pre>
-    </div>
+  {% if erreur %}
+    <div class="message-erreur">❌ {{ erreur }}</div>
   {% endif %}
 
+  <form id="form-analyse"
+        action="{% url 'analyse_fichier' %}"
+        method="post"
+        enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="forme">
+      <!-- Sélection du domaine d'analyse -->
+      <label for="domaine">Domaine d'analyse :</label>
+      <select id="domaine" name="domaine" required>
+        <option value="" disabled selected>-- Sélectionnez un domaine --</option>
+        <option value="MARKETING & FINANCE & INDUSTRIE & SANTE">MARKETING &amp; FINANCE &amp; INDUSTRIE &amp; SANTE</option>
+        <option value="SANTE & MEDECINE">SANTE &amp; MEDECINE</option>
+        <option value="GEOGRAPHIE & TELEDETECTION">GEOGRAPHIE &amp; TELEDETECTION</option>
+        <option value="STATISTIQUES GÉNÉRALES & POWER BI">STATISTIQUES GÉNÉRALES &amp; POWER BI</option>
+      </select>
+
+      <!-- Champ pour le sujet -->
+      <label for="sujet">Question / Sujet d'analyse :</label>
+      <textarea id="sujet" name="sujet"
+        placeholder="Ex: Identifie le type de relief, le couvert végétal ou la structure urbaine..."></textarea>
+
+      <!-- Champ pour le fichier -->
+      <label for="file">Sélectionner un fichier :</label>
+      <input type="file" id="file" name="file"
+        accept=".pdf,.csv,.xlsx,.xls,.json,.jpg,.jpeg,.png,.webp,.tif,.tiff,.geojson,.shp"
+        required>
+
+      <button type="submit">Analyser</button>
+    </div>
+  </form>
+
+  <!-- Zone de messages (info, erreurs, statut domaine, etc.) -->
   <div id="output"></div>
-  <script src="{% static 'app.js' %}"></script>
+
+  <script>
+    const URL_DOMAINE = "{% url 'api_domaine_selected' %}";
+    const CSRF_TOKEN = "{{ csrf_token }}";
+
+    /* ---------- 1. Envoi du domaine dès sa sélection ---------- */
+    const domaineSelect = document.getElementById('domaine');
+    const outputDiv = document.getElementById('output');
+
+    domaineSelect.addEventListener('change', async (e) => {
+      const domaine = e.target.value;
+      if (!domaine) return;
+
+      outputDiv.innerHTML = "<p>⏳ Chargement du domaine...</p>";
+
+      const formData = new FormData();
+      formData.append('domaine', domaine);
+      formData.append('csrfmiddlewaretoken', CSRF_TOKEN);
+
+      try {
+        const response = await fetch(URL_DOMAINE, {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-CSRFToken': CSRF_TOKEN },
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          outputDiv.innerHTML = `<p style="color:#38bdf8;">✅ ${data.message}</p>`;
+        } else {
+          outputDiv.innerHTML = `<p style="color:#ef4444;">❌ ${data.message || 'Erreur inconnue'}</p>`;
+        }
+      } catch (err) {
+        outputDiv.innerHTML = `<p style="color:#ef4444;">Erreur réseau : ${err.message}</p>`;
+      }
+    });
+
+    /* ---------- 2. Soumission du formulaire en fetch (optionnel) ---------- */
+    // Si tu veux soumettre via fetch au lieu du POST classique Django,
+    // décommente ce bloc et supprime action="" du <form>.
+
+    
+    document.getElementById('form-analyse').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('file');
+      const sujetInput = document.getElementById('sujet');
+
+      if (!fileInput.files.length) {
+        outputDiv.innerHTML = "<p style='color:red;'>Veuillez sélectionner un fichier.</p>";
+        return;
+      }
+      if (!domaineSelect.value) {
+        outputDiv.innerHTML = "<p style='color:red;'>Veuillez choisir un domaine.</p>";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      formData.append('domaine', domaineSelect.value);
+      formData.append('sujet', sujetInput.value);
+      formData.append('csrfmiddlewaretoken', CSRF_TOKEN);
+
+      outputDiv.innerHTML = "<p>Analyse en cours...</p>";
+
+      try {
+        const response = await fetch("{% url 'analyse_fichier' %}", {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-CSRFToken': CSRF_TOKEN },
+        });
+
+        if (!response.ok) throw new Error(`Erreur serveur : ${response.status}`);
+
+        // Django renvoie du HTML (resultats.html) → on remplace la page
+        const html = await response.text();
+        document.open();
+        document.write(html);
+        document.close();
+
+      } catch (err) {
+        outputDiv.innerHTML = `<p style='color:red;'>Erreur : ${err.message}</p>`;
+      }
+    });
+    
+  </script>
 </body>
 </html>

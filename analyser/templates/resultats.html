@@ -21,44 +21,46 @@
       background-color: #f4f6f9;
     }
 
-    /* Style pour embellir le rendu Markdown / Texte */
-.resultats-text {
-  background: #ffffff;
-  color: #2c3e50;
-  padding: 20px;
-  border-radius: 8px;
-  border-left: 4px solid #0078d4;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  font-family: inherit;
-  font-size: 1em;
-  line-height: 1.6;
-}
+    .resultats-text {
+      background: #ffffff;
+      color: #2c3e50;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #0078d4;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      font-family: inherit;
+      font-size: 1em;
+      line-height: 1.6;
+    }
 
-.resultats-text pre {
-  background-color: #f8fafc;
-  padding: 15px;
-  border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  white-space: pre-wrap; /* Conserve les retours à la ligne proprement */
-  font-family: 'Courier New', Courier, monospace;
-}
+    .resultats-text pre {
+      background-color: #f8fafc;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      white-space: pre-wrap;
+      font-family: 'Courier New', Courier, monospace;
+    }
 
-.resultats-text ul {
-  padding-left: 20px;
-}
+    .resultats-text ul {
+      padding-left: 20px;
+    }
 
-.resultats-text li {
-  margin-bottom: 8px;
-} 
+    .resultats-text li {
+      margin-bottom: 8px;
+    }
+
     h1 {
       text-align: center;
       color: #333;
     }
+
     .actions {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
     }
+
     .btn {
       padding: 10px 18px;
       border: none;
@@ -68,20 +70,24 @@
       text-decoration: none;
       display: inline-block;
     }
+
     .btn-back {
       background-color: #6c757d;
       color: white;
     }
+
     .btn-pdf {
       background-color: #28a745;
       color: white;
     }
+
     .container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
       margin-top: 10px;
     }
+
     .panel {
       background: #ffffff;
       padding: 20px;
@@ -89,7 +95,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    /* Style unifié pour TOUS les tableaux de la page */
+    /* Style unifié pour TOUS les tableaux */
     .table-stats, 
     .table-powerbi, 
     .panel table {
@@ -104,7 +110,6 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
     }
 
-    /* En-têtes des tableaux (Bleu propre, texte blanc) */
     .table-stats th, 
     .table-powerbi th, 
     .panel table th {
@@ -117,14 +122,12 @@
       border: none !important;
     }
 
-    /* Alignement automatique à droite pour les colonnes numériques */
     .table-stats th.text-end, .table-stats td.text-end,
     .table-powerbi th.text-end, .table-powerbi td.text-end,
     .panel table th.text-end, .panel table td.text-end {
       text-align: right !important;
     }
 
-    /* Cellules des tableaux */
     .table-stats td, 
     .table-powerbi td, 
     .panel table td {
@@ -134,21 +137,18 @@
       color: #333333 !important;
     }
 
-    /* Suppression de la dernière ligne inutile */
     .table-stats tr:last-child td, 
     .table-powerbi tr:last-child td, 
     .panel table tr:last-child td {
       border-bottom: none !important;
     }
 
-    /* Alternance des couleurs de lignes (Effet Zèbre) */
     .table-stats tbody tr:nth-child(even), 
     .table-powerbi tbody tr:nth-child(even), 
     .panel table tbody tr:nth-child(even) {
       background-color: #f8fafc !important;
     }
 
-    /* Effet au survol des lignes */
     .table-stats tbody tr:hover, 
     .table-powerbi tbody tr:hover, 
     .panel table tbody tr:hover {
@@ -184,16 +184,6 @@
 
     .full-width {
       grid-column: 1 / -1;
-    }
-
-    .resultats-text {
-      background: #fafbfc;
-      color: #356fa9;
-      padding: 15px;
-      border-radius: 8px;
-      word-wrap: break-word;
-      font-size: 0.95em;
-      line-height: 1.5;
     }
 
     .powerbi-card {
@@ -238,9 +228,32 @@
       border-radius: 0 4px 4px 0;
     }
 
-    /* Masquage CSS pour le mode Image */
     .is-image-mode .visualisation-dynamique-panel {
       display: none !important;
+    }
+
+    /* ✅ NOUVEAU : Message quand pas de données */
+    .no-data-message {
+      text-align: center;
+      color: #888;
+      padding: 40px 20px;
+      font-style: italic;
+      background: #fafbfc;
+      border-radius: 8px;
+      border: 1px dashed #ccc;
+    }
+
+    .metriques-bloc {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 4px solid #0078d4;
+    }
+
+    .metriques-bloc h3 {
+      margin-top: 0;
+      color: #0078d4;
     }
   </style>
 </head>
@@ -251,7 +264,6 @@
     <button onclick="telechargerPDF()" class="btn btn-pdf">Télécharger en PDF</button>
   </div>
 
-  <!-- Zone d'exportation PDF -->
   <div id="rapport-pdf">
     <h1 id="titre-fichier">Analyse de : {{ fichier }}</h1>
 
@@ -270,34 +282,46 @@
       </div>
 
       <!-- Partie 2 : Graphiques Interactifs (Caché si c'est une image) -->
-    {% if not is_image %}
+      {% if not is_image %}
         <div class="panel visualisation-dynamique-panel">
           <h2>📈 Visualisation Dynamique</h2>
-          <div id="plotly-chart" style="width:100%; height:400px;"></div>
+          <div id="plotly-chart" style="width:100%; height:400px;">
+            {% if not plot_data_json %}
+              <div class="no-data-message">
+                📊 Aucune donnée numérique détectée dans ce fichier.<br>
+                Les visualisations nécessitent au moins une colonne de valeurs numériques.
+              </div>
+            {% endif %}
+          </div>
         </div>
       {% endif %}
 
-
- {% if is_image %}
-    <div class="row mt-4">
-        <div class="col-md-8">
-            <h3>Image de Télédétection (Zones délimitées)</h3>
-            {% if image_delimitee %}
-                <img src="{{ image_delimitee }}" alt="Image délimitée" class="img-fluid rounded shadow">
-            {% endif %}
-        </div>
-        
-        {% if rapport_teledection %}
-        <div class="col-md-4">
-            <div class="card p-3 shadow-sm">
-                <h4 class="mb-3">Rapport d'Analyse Spatiale SIG</h4>
-                {{ rapport_teledection|safe }}
+      <!-- Section Image (Télédétection / Sol / Médical) -->
+      {% if is_image and image_delimitee %}
+        <div class="panel full-width">
+          <h2>🔬 Image Analysée (Annotations)</h2>
+          <img src="{{ image_delimitee }}" 
+               alt="Image analysée" 
+               style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          
+          {% if rapport_teledection %}
+            <div class="metriques-bloc">
+              <h3>📊 Métriques objectives</h3>
+              <ul style="margin: 10px 0;">
+                {% if rapport_teledection.surface_fissures %}
+                  <li><strong>Surface fissurée :</strong> {{ rapport_teledection.surface_fissures }}%</li>
+                {% endif %}
+                {% if rapport_teledection.surface_vegetation %}
+                  <li><strong>Surface végétalisée :</strong> {{ rapport_teledection.surface_vegetation }}%</li>
+                {% endif %}
+                {% if rapport_teledection.texture %}
+                  <li><strong>Indice de texture :</strong> {{ rapport_teledection.texture }}</li>
+                {% endif %}
+              </ul>
             </div>
+          {% endif %}
         </div>
-        {% endif %}
-    </div>
-{% endif %}
-
+      {% endif %}
 
       <!-- Module Power BI Avancé - Studio de Visualisation Interactif -->
       {% if plot_data_json and not is_image %}
@@ -310,19 +334,16 @@
           <!-- Barre de Contrôle Interactive -->
           <div style="background-color: #f8fafc; padding: 15px 20px; border-bottom: 1px solid #0078d4; display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
             
-            <!-- Sélection de la colonne X -->
             <div>
               <label for="select-x" style="font-weight: bold; font-size: 0.85em; display: block; color: #333;">Axe X (Base) :</label>
               <select id="select-x" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ccc;"></select>
             </div>
 
-            <!-- Sélection de la colonne Y (Axe principal) -->
             <div>
               <label for="select-y1" style="font-weight: bold; font-size: 0.85em; display: block; color: #333;">Axe Y (Métrique 1) :</label>
               <select id="select-y1" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ccc;"></select>
             </div>
 
-            <!-- Choix du Type de Graphique Principal -->
             <div>
               <label for="select-chart-type" style="font-weight: bold; font-size: 0.85em; display: block; color: #333;">Type de Graphique :</label>
               <select id="select-chart-type" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ccc;">
@@ -333,7 +354,6 @@
               </select>
             </div>
 
-            <!-- Option de Superposition (Axe Y2 secondaire) -->
             <div style="border-left: 2px solid #ddd; padding-left: 15px;">
               <label for="select-y2" style="font-weight: bold; font-size: 0.85em; display: block; color: #d13438;">Superposer avec :</label>
               <select id="select-y2" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ccc;">
@@ -341,7 +361,6 @@
               </select>
             </div>
 
-            <!-- Type du 2ème Graphique superposé -->
             <div id="wrapper-type-y2" style="display: none;">
               <label for="select-chart-type2" style="font-weight: bold; font-size: 0.85em; display: block; color: #d13438;">Style Superposition :</label>
               <select id="select-chart-type2" style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ccc;">
@@ -353,12 +372,10 @@
 
           </div>
 
-          <!-- Zone de Graphique Générée Dynamiquement -->
           <div style="padding: 20px;">
             <div id="powerbi-custom-chart" style="width:100%; height:450px;"></div>
           </div>
 
-          <!-- Légende & Table des données -->
           <div class="powerbi-legend">
             <strong>📌 Guide Power BI :</strong> Choisissez vos axes et le type de visualisation ci-dessus. Utilisez la superposition pour comparer 2 variables numériques simultanément.
           </div>
@@ -390,195 +407,207 @@
     $(document).ready(function() {
       {% if plot_data_json and not is_image %}
         const payload = {{ plot_data_json|safe }};
-        const records = payload.records;
-        const allCols = payload.columns;
-        const numCols = payload.numeric_cols;
 
-        // Palette de couleurs Power BI
-        const palette = ['#0078d4', '#d13438', '#ffb900', '#107c41', '#881798', '#00868b'];
+        // ✅ Vérification : données valides ?
+        if (!payload || !payload.records || payload.records.length === 0 || !payload.numeric_cols || payload.numeric_cols.length === 0) {
+          console.warn("Pas de données numériques à afficher.");
+          $('#plotly-chart').html(
+            '<div class="no-data-message">📊 Aucune donnée numérique exploitable.</div>'
+          );
+        } else {
+          const records = payload.records;
+          const allCols = payload.columns;
+          const numCols = payload.numeric_cols;
+          const catCols = payload.categorical_cols || [];
 
-        // =========================================================
-        // 1. PARTIE : VISUALISATION DYNAMIQUE
-        // =========================================================
-        function renderDynamicChart(categories, values, titleLabel) {
-          const xName = allCols[0] || 'Catégorie';
-          const yName = numCols[0] || allCols[1] || 'Valeur';
+          // Palette de couleurs Power BI
+          const palette = ['#0078d4', '#d13438', '#ffb900', '#107c41', '#881798', '#00868b'];
 
-          const traces = categories.map((cat, i) => ({
-            x: [cat],
-            y: [values[i]],
-            name: String(cat),
-            type: 'bar',
-            marker: { 
-              color: palette[i % palette.length] 
+          // =========================================================
+          // 1. PARTIE : VISUALISATION DYNAMIQUE
+          // =========================================================
+          function renderDynamicChart(categories, values, titleLabel) {
+            const xName = catCols[0] || allCols[0] || 'Catégorie';
+            const yName = numCols[0] || allCols[1] || 'Valeur';
+
+            const traces = categories.map((cat, i) => ({
+              x: [cat],
+              y: [values[i]],
+              name: String(cat),
+              type: 'bar',
+              marker: { 
+                color: palette[i % palette.length] 
+              }
+            }));
+
+            const layout = {
+              title: {
+                text: `Aperçu global : ${yName} par ${xName}`,
+                font: { size: 16 }
+              },
+              barmode: 'group',
+              xaxis: { title: xName, automargin: true },
+              yaxis: { title: yName, automargin: true },
+              showlegend: true,
+              legend: {
+                orientation: 'h',
+                x: 0,
+                y: -0.25,
+                xanchor: 'left'
+              },
+              margin: { t: 50, b: 80, l: 50, r: 20 }
+            };
+
+            Plotly.newPlot('plotly-chart', traces, layout, { responsive: true });
+          }
+
+          // Premier affichage du graphique du haut
+          if (records.length > 0) {
+            const defaultX = catCols[0] || allCols[0];
+            const defaultY = numCols[0];
+
+            const defaultCategories = records.map(r => r[defaultX]);
+            const defaultValues = records.map(r => parseFloat(r[defaultY]) || 0);
+
+            renderDynamicChart(defaultCategories, defaultValues, defaultY);
+          }
+
+          // ==========================================
+          // 2. PARTIE : STUDIO POWER BI (BAS)
+          // ==========================================
+          allCols.forEach(col => {
+            $('#select-x').append(new Option(col, col));
+          });
+
+          numCols.forEach(col => {
+            $('#select-y1').append(new Option(col, col));
+            $('#select-y2').append(new Option(col, col));
+          });
+
+          $('#select-y2').val('none');
+
+          function updateCustomChart() {
+            const xCol = $('#select-x').val();
+            const y1Col = $('#select-y1').val();
+            const y2Col = $('#select-y2').val();
+            const chartType1 = $('#select-chart-type').val();
+            const chartType2 = $('#select-chart-type2').val();
+
+            if (!xCol || !y1Col || !records || records.length === 0) return;
+
+            const groupData = {};
+            const groupDataY2 = {};
+
+            records.forEach(r => {
+              const key = r[xCol] || 'Inconnu';
+              const val1 = parseFloat(r[y1Col]) || 0;
+              groupData[key] = (groupData[key] || 0) + val1;
+
+              if (y2Col !== 'none') {
+                const val2 = parseFloat(r[y2Col]) || 0;
+                groupDataY2[key] = (groupDataY2[key] || 0) + val2;
+              }
+            });
+
+            const xVals = Object.keys(groupData);
+            const y1Vals = Object.values(groupData);
+            const traces = [];
+
+            if (chartType1 === 'pie') {
+              traces.push({
+                labels: xVals,
+                values: y1Vals,
+                type: 'pie',
+                marker: { colors: palette },
+                textinfo: 'label+percent'
+              });
+            } else {
+              traces.push({
+                x: xVals,
+                y: y1Vals,
+                name: y1Col,
+                type: chartType1 === 'scatter' ? 'scatter' : chartType1,
+                mode: chartType1 === 'scatter' ? 'markers' : (chartType1 === 'line' ? 'lines+markers' : undefined),
+                marker: { color: palette[0], size: 8 },
+                line: { width: 3 }
+              });
             }
-          }));
 
-          const layout = {
-            title: {
-              text: `Aperçu global : ${yName} par ${xName}`,
-              font: { size: 16 }
-            },
-            barmode: 'group',
-            xaxis: { title: xName, automargin: true },
-            yaxis: { title: yName, automargin: true },
-            showlegend: true,
-            legend: {
-              orientation: 'h',
-              x: 0,
-              y: -0.25,
-              xanchor: 'left'
-            },
-            margin: { t: 50, b: 80, l: 50, r: 20 }
-          };
+            if (y2Col !== 'none' && chartType1 !== 'pie') {
+              $('#wrapper-type-y2').show();
+              const y2Vals = Object.values(groupDataY2);
 
-          Plotly.newPlot('plotly-chart', traces, layout, { responsive: true });
-        }
+              traces.push({
+                x: xVals,
+                y: y2Vals,
+                name: y2Col,
+                type: chartType2 === 'scatter' ? 'scatter' : chartType2,
+                mode: chartType2 === 'scatter' ? 'markers' : (chartType2 === 'line' ? 'lines+markers' : undefined),
+                yaxis: 'y2',
+                marker: { color: palette[1], size: 8 },
+                line: { width: 3, dash: 'dot' }
+              });
+            } else {
+              $('#wrapper-type-y2').hide();
+            }
 
-        // Premier affichage du graphique du haut
-        if (records && records.length > 0) {
-          const defaultX = allCols[0];
-          const defaultY = numCols[0] || allCols[1];
+            const layout = {
+              title: y2Col !== 'none' ? `Évolution : ${y1Col} & ${y2Col} par ${xCol}` : `${y1Col} par ${xCol}`,
+              xaxis: { title: xCol, automargin: true },
+              yaxis: { title: y1Col, automargin: true },
+              yaxis2: y2Col !== 'none' ? {
+                title: y2Col,
+                overlaying: 'y',
+                side: 'right',
+                automargin: true
+              } : undefined,
+              margin: { t: 50, b: 60, l: 60, r: y2Col !== 'none' ? 60 : 20 },
+              showlegend: true,
+              legend: { orientation: 'h', y: 1.15 }
+            };
 
-          const defaultCategories = records.map(r => r[defaultX]);
-          const defaultValues = records.map(r => parseFloat(r[defaultY]) || 0);
+            Plotly.react('powerbi-custom-chart', traces, layout, { responsive: true });
+          }
 
-          renderDynamicChart(defaultCategories, defaultValues, defaultY);
-        }
+          $('#select-x, #select-y1, #select-y2, #select-chart-type, #select-chart-type2').on('change', function() {
+            updateCustomChart();
+          });
 
-        // ==========================================
-        // 2. PARTIE : STUDIO POWER BI (BAS)
-        // ==========================================
-        allCols.forEach(col => {
-          $('#select-x').append(new Option(col, col));
-        });
+          updateCustomChart();
 
-        numCols.forEach(col => {
-          $('#select-y1').append(new Option(col, col));
-          $('#select-y2').append(new Option(col, col));
-        });
-
-        $('#select-y2').val('none');
-
-        function updateCustomChart() {
-          const xCol = $('#select-x').val();
-          const y1Col = $('#select-y1').val();
-          const y2Col = $('#select-y2').val();
-          const chartType1 = $('#select-chart-type').val();
-          const chartType2 = $('#select-chart-type2').val();
-
-          if (!xCol || !y1Col || !records || records.length === 0) return;
-
-          const groupData = {};
-          const groupDataY2 = {};
-
-          records.forEach(r => {
-            const key = r[xCol] || 'Inconnu';
-            const val1 = parseFloat(r[y1Col]) || 0;
-            groupData[key] = (groupData[key] || 0) + val1;
-
-            if (y2Col !== 'none') {
-              const val2 = parseFloat(r[y2Col]) || 0;
-              groupDataY2[key] = (groupDataY2[key] || 0) + val2;
+          // ==========================================
+          // 3. PARTIE : DATATABLES
+          // ==========================================
+          const table = $('.powerbi-card table').addClass('table-powerbi').DataTable({
+            "pageLength": 10,
+            "responsive": true,
+            "language": {
+              "search": "🔍 Rechercher dans la table :",
+              "lengthMenu": "Afficher _MENU_ lignes",
+              "paginate": { "next": "▶", "previous": "◀" }
             }
           });
 
-          const xVals = Object.keys(groupData);
-          const y1Vals = Object.values(groupData);
-          const traces = [];
+          $('.table-powerbi tbody').on('click', 'tr', function() {
+            const defaultY = numCols[0] || allCols[1];
 
-          if (chartType1 === 'pie') {
-            traces.push({
-              labels: xVals,
-              values: y1Vals,
-              type: 'pie',
-              marker: { colors: palette },
-              textinfo: 'label+percent'
-            });
-          } else {
-            traces.push({
-              x: xVals,
-              y: y1Vals,
-              name: y1Col,
-              type: chartType1 === 'scatter' ? 'scatter' : chartType1,
-              mode: chartType1 === 'scatter' ? 'markers' : (chartType1 === 'line' ? 'lines+markers' : undefined),
-              marker: { color: palette[0], size: 8 },
-              line: { width: 3 }
-            });
-          }
+            if ($(this).hasClass('selected')) {
+              $(this).removeClass('selected');
+              const defaultCategories = records.map(r => r[allCols[0]]);
+              const defaultValues = records.map(r => parseFloat(r[defaultY]) || 0);
+              renderDynamicChart(defaultCategories, defaultValues, defaultY);
+            } else {
+              table.$('tr.selected').removeClass('selected');
+              $(this).addClass('selected');
 
-          if (y2Col !== 'none' && chartType1 !== 'pie') {
-            $('#wrapper-type-y2').show();
-            const y2Vals = Object.values(groupDataY2);
-
-            traces.push({
-              x: xVals,
-              y: y2Vals,
-              name: y2Col,
-              type: chartType2 === 'scatter' ? 'scatter' : chartType2,
-              mode: chartType2 === 'scatter' ? 'markers' : (chartType2 === 'line' ? 'lines+markers' : undefined),
-              yaxis: 'y2',
-              marker: { color: palette[1], size: 8 },
-              line: { width: 3, dash: 'dot' }
-            });
-          } else {
-            $('#wrapper-type-y2').hide();
-          }
-
-          const layout = {
-            title: y2Col !== 'none' ? `Évolution : ${y1Col} & ${y2Col} par ${xCol}` : `${y1Col} par ${xCol}`,
-            xaxis: { title: xCol, automargin: true },
-            yaxis: { title: y1Col, automargin: true },
-            yaxis2: y2Col !== 'none' ? {
-              title: y2Col,
-              overlaying: 'y',
-              side: 'right',
-              automargin: true
-            } : undefined,
-            margin: { t: 50, b: 60, l: 60, r: y2Col !== 'none' ? 60 : 20 },
-            showlegend: true,
-            legend: { orientation: 'h', y: 1.15 }
-          };
-
-          Plotly.react('powerbi-custom-chart', traces, layout, { responsive: true });
-        }
-
-        $('#select-x, #select-y1, #select-y2, #select-chart-type, #select-chart-type2').on('change', function() {
-          updateCustomChart();
-        });
-
-        updateCustomChart();
-
-        // ==========================================
-        // 3. PARTIE : DATATABLES ET INTERACTION TABLE
-        // ==========================================
-        const table = $('.powerbi-card table').addClass('table-powerbi').DataTable({
-          "pageLength": 10,
-          "responsive": true,
-          "language": {
-            "search": "🔍 Rechercher dans la table :",
-            "lengthMenu": "Afficher _MENU_ lignes",
-            "paginate": { "next": "▶", "previous": "◀" }
-          }
-        });
-
-        $('.table-powerbi tbody').on('click', 'tr', function() {
-          const defaultY = numCols[0] || allCols[1];
-
-          if ($(this).hasClass('selected')) {$(this).removeClass('selected');
-            const defaultCategories = records.map(r => r[allCols[0]]);
-            const defaultValues = records.map(r => parseFloat(r[defaultY]) || 0);
-            renderDynamicChart(defaultCategories, defaultValues, defaultY);
-          } else {
-            table.$('tr.selected').removeClass('selected');$(this).addClass('selected');
-
-            const rowData = table.row(this).data();
-            if (rowData) {
-              const selectedLabel = rowData[0];
-              renderDynamicChart([selectedLabel], [parseFloat(rowData[1]) || 0], `${defaultY} (${selectedLabel})`);
+              const rowData = table.row(this).data();
+              if (rowData) {
+                const selectedLabel = rowData[0];
+                renderDynamicChart([selectedLabel], [parseFloat(rowData[1]) || 0], `${defaultY} (${selectedLabel})`);
+              }
             }
-          }
-        });
+          });
+        }
       {% endif %}
     });
   </script>
